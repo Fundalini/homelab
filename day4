@@ -182,6 +182,67 @@ ip dhcp snooping vlan 1
 no ip dhcp snooping information option
 end
 
+-------------------TASK 6 nat and pat
+
+config t
+no access-list 8
+access-list 8 permit host 192.168.103.21
+access-list 8 permit host 192.168.103.22
+Int Gi 3
+ ip nat Inside
+Int gi 1
+ ip nat Outside
+IP Nat inside source static tcp 192.168.103.21 80 208.8.8.77 80
+IP Nat inside source static tcp 192.168.103.21 443 208.8.8.77 443
+IP Nat inside source static tcp 192.168.103.22 80 208.8.8.77 8080
+IP Nat inside source static tcp 192.168.103.22 443 208.8.8.77 8443
+
+end
+show ip nat translation
+
+
+---------------------TASK 6.1 ADVANCE PANG TRABAHO LAB
+192.168.103.21 sumbongbangag.ph 8080, 8443
+
+192.168.103.22 sumbongbangago.ph 80, 443, 8080, 8443
+
+config t
+no access-list 8
+access-list 8 permit host 192.168.103.21
+access-list 8 permit host 192.168.103.22
+Int Gi 3
+ ip nat Inside
+Int gi 1
+ ip nat Outside
+conf t
+NO IP Nat inside source static tcp 192.168.103.21 80 208.8.8.77 80
+No IP Nat inside source static tcp 192.168.103.21 443 208.8.8.77 443
+IP Nat inside source static tcp 192.168.103.21 80 208.8.8.77 8080
+IP Nat inside source static tcp 192.168.103.21 443 208.8.8.77 8443
+IP Nat inside source static tcp 192.168.103.22 80 208.8.8.70 80
+IP Nat inside source static tcp 192.168.103.22 443 208.8.8.70 443
+IP Nat inside source static tcp 192.168.103.22 80 208.8.8.70 8080
+IP Nat inside source static tcp 192.168.103.22 443 208.8.8.70 8443
+IP nat inside source list 8 int gi 1 Overload
+end
+show ip nat translation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
