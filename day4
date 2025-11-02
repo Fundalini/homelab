@@ -2,4 +2,228 @@ day 4 notes
 how to be hired in SOC
 task 1: blue team:
 UTM: unified thread management
-firewal vpn, antivirus, nac, ips/ids
+firewal vpn, antivirus(di kaya ni cisco), nac network admission control, ips/ids intrusion prevention sys
+
+
+task 3: tell cisco to sumbong to elk elastic logdash kiv
+conf t
+logging on
+logging host 208.8.8.133 transport udp port 9001
+ logging trap informational
+end
+
+-------------task 4: 
+LAYER 3 FIREWALL. BLOCK ALL PORN SITES
+
+config t
+NO ip access-list standard NOPORN
+ip access-list standard NOPORN
+DENY 66.254.0.0 0.0.255.255 log
+deny 161.49.0.0 0.0.255.255 log
+DENY 104.21.0.0 0.0.255.255 log
+DENY 68.235.0.0 0.0.255.255 log
+DENY 104.17.0.0 0.0.255.255 log
+DENY 88.208.0.0 0.0.255.255 log
+DENY 208.77.0.0 0.0.255.255 log
+DENY 172.67.0.0 0.0.255.255 log
+Permit Any
+Int Gi 1
+ ip access-group NOPORN in
+end
+
+task 4.2
+config t
+no access-list 25
+access-list 25 DENY 66.254.0.0 0.0.255.255 log
+access-list 25 DENY 104.21.0.0 0.0.255.255 log
+access-list 25 DENY 68.235.0.0 0.0.255.255 log
+access-list 25 DENY 104.17.0.0 0.0.255.255 log
+access-list 25 DENY 88.208.0.0 0.0.255.255 log
+access-list 25 DENY 208.77.0.0 0.0.255.255 log
+access-list 25 DENY 172.67.0.0 0.0.255.255 log
+access-list 25 permit Any
+Int gi 1
+ ip access-group 25 in
+end
+
+config t
+Int gi 1
+ NO ip access-group 25 in
+end
+
+-----------block school
+ping www.dlsu.edu.ph 172.67.14.0   104.22.36.0
+ping www.ccp.edu.ph 50.6.160.0     
+ping www.feu.edu.ph 184.168.125.0  
+ping  www.ue.edu.ph 155.137.92.0  
+ping  www.tup.edu.ph 192.124.249.12
+
+config t
+NO ip access-list standard NOISKUL
+ip access-list standard NOISKUL
+DENY   172.67.14.0   0.0.255.255 
+DENY   50.6.160.0   0.0.255.255
+DENY   184.168.125.0   0.0.255.255
+DENY   155.137.92.0   0.0.255.255
+DENY   192.124.249.12   0.0.255.255
+Permit Any
+Int Gi 1
+ ip access-group NOISKUL in
+end
+
+!permit again
+config t
+Int gi 1
+ NO ip access-group NOISKUL in
+end
+
+
+------------task 4.2 : making very hackable site
+
+config t
+int Gi 3
+ no shut
+ ip add 192.168.103.11 255.255.255.0
+ ip add 192.168.103.10 255.255.255.0 Secondary
+service finger
+service tcp-small-servers
+service udp-small-servers
+ip dns server
+ip http server
+ip http secure-server
+telephony-service
+max-ephone 2
+max-dn 4
+ip source-address 192.168.103.11 port 2000
+voice service voip
+ allow-connections sip to sip
+ sip
+   registrar server expires max 600 min 60
+ voice register global
+  mode cme
+  source-address 192.168.103.11 port 5060
+  max-dn 12
+  max-pool 12
+!Make Ping EASY
+ip host bet10.ph 192.168.103.10
+ip host bet11.ph 192.168.103.11
+end
+
+task 5: layer 4 firewall
+
+Config t
+service timestamps log datetime
+service timestamps debug datetime
+!!How to Sumbong to SPLUNK LOGS
+NO IP access-list Extended NGFW1
+IP access-list Extended NGFW1
+ Permit tcp Any host bet10.ph eq 80 log
+ Permit tcp Any host bet10.ph eq 443 log
+ Permit icmp Any host bet10.ph log
+ Permit tcp Any host bet11.ph eq 53 log
+ Permit tcp Any host bet11.ph eq 443 log
+ Permit tcp Any host bet11.ph eq 22 log
+ Int Gi 3
+  ip access-group NGFW1 in
+end
+
+REMOVE FIREWALL:
+CONfig t
+ Int Gi 3
+  NO ip access-group NGFW1 in
+end
+
+-----------------task 5.1 create NGFW2
+bet10.ph 1720,2000
+bet11.ph ping, 443
+
+Config t
+service timestamps log datetime
+service timestamps debug datetime
+!!How to Sumbong to SPLUNK LOGS
+NO IP access-list Extended NGFW1
+IP access-list Extended NGFW1
+ Permit tcp Any host bet10.ph eq 1720 log
+ Permit tcp Any host bet10.ph eq 2000 log
+ Permit icmp Any host bet11.ph log
+ Permit tcp Any host bet11.ph eq 443 log
+ Int Gi 3
+  ip access-group NGFW1 in
+end
+
+------------------
+task 5.3 create NGFW3
+
+bet10.ph ping,53
+bet11.ph 80, 443
+
+Config t
+service timestamps log datetime
+service timestamps debug datetime
+!!How to Sumbong to SPLUNK LOGS
+NO IP access-list Extended NGFW1
+IP access-list Extended NGFW1
+ Permit icmp Any host bet10.ph log
+ Permit tcp Any host bet10.ph eq 53 log
+ Permit tcp Any host bet11.ph eq 80 log
+ Permit tcp Any host bet11.ph eq 443 log
+ Int Gi 3
+  ip access-group NGFW1 in
+end
+
+
+
+
+-------------------------
+PREVENT LAYER 2 ATTACK: FAKE DHCP SERVER
+conf t
+ip dhcp snooping
+ip dhcp snooping vlan 1
+no ip dhcp snooping information option
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
