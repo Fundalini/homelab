@@ -9,6 +9,16 @@ interface Vlan1
 end
 write memory
 
+-----------------IP Cam
+
+config t
+ip dhcp pool SECURITYCAMERA
+ host 10.28.50.8 255.255.255.0
+ client-identifier c471.fe0f.eb82
+ default-router 10.28.50.1
+end
+
+
 ------------------------ Preparing DHCP server
 config t
 ip dhcp Excluded-add 10.28.1.1 10.28.1.100
@@ -19,22 +29,22 @@ ip dhcp pool DEFAULT
    network 10.28.1.0 255.255.255.0
    default-router 10.28.1.1
    domain-name DEFAULT.COM
-   dns-server 10.28.1.10
+   dns-server 10.28.1.101
 ip dhcp pool RIVANWIFI
    network 10.28.10.0 255.255.255.0
    default-router 10.28.10.1
    domain-name RIVANWIFI.COM
-   dns-server 10.28.1.10
+   dns-server 10.28.1.101
 ip dhcp pool RIVANCAMS
    network 10.28.50.0 255.255.255.0
    default-router 10.28.50.1
    domain-name RIVANCAMS.COM
-   dns-server 10.28.1.10
+   dns-server 10.28.1.101
 ip dhcp pool RIVANVOIP
    network 10.28.100.0 255.255.255.0
    default-router 10.28.100.1
    domain-name RIVANVOIP.COM
-   dns-server 10.28.1.10
+   dns-server 10.28.1.101
    option 150 ip 10.28.100.1   
   end
 
@@ -77,3 +87,4 @@ Ephone 1
 end
 
 -----------------
+
