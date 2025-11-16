@@ -1,0 +1,7 @@
+how to shorten ipv6
+  1. all leading zeroes removed
+  2. consecutive zeros turn into ::
+  3. other consecutive zeroes turn into :0:
+  4. most consecutive zeros gets to be ::
+
+short exercise
